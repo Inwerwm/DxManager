@@ -1,11 +1,17 @@
-float4 MyVertexShader(float4 position : SV_Position) : SV_Position
+struct VertexPositionColor
 {
-	return position;
+	float4 Position : SV_Position;
+	float4 Color : COLOR;
+};
+
+VertexPositionColor MyVertexShader(VertexPositionColor input)
+{
+	return input;
 }
 
-float4 MyPixelShader() : SV_Target
+float4 MyPixelShader(VertexPositionColor input) : SV_Target
 {
-	return float4(1, 1, 1, 1);
+	return input.Color;
 }
 
 technique10 MyTechnique

@@ -1,4 +1,5 @@
 ﻿using DxManager;
+using SlimDX;
 using SlimDX.Direct3D11;
 using System;
 using System.Collections.Generic;
@@ -19,21 +20,27 @@ namespace GUITest
             vertexLayout = new InputLayout(
                 Context.Device,
                 Effect.GetTechniqueByIndex(0).GetPassByIndex(0).Description.Signature,
-                new[] {
-                    new InputElement
-                    {
-                        SemanticName = "SV_Position",
-                        Format = SlimDX.DXGI.Format.R32G32B32_Float
-                    }
-                }
+                VertexPositionColor.VertexElements
             );
 
             // 頂点バッファに頂点を追加
             using (SlimDX.DataStream vertexStream = new SlimDX.DataStream(
                 new[] {
-                    new SlimDX.Vector3(0, 0.5f, 0),
-                    new SlimDX.Vector3(0.5f, 0, 0),
-                    new SlimDX.Vector3(-0.5f, 0, 0),
+                    new VertexPositionColor
+                    {
+                        Position = new Vector3(0, 0.5f, 0),
+                        Color = new Vector3(1, 1, 1)
+                    },
+                    new VertexPositionColor
+                    {
+                        Position = new Vector3(0.5f, 0, 0),
+                        Color = new Vector3(0, 0, 1)
+                    },
+                    new VertexPositionColor
+                    {
+                        Position = new Vector3(-0.5f, 0, 0),
+                        Color = new Vector3(1, 0, 0)
+                    }
                 },
                 true,
                 true
@@ -54,13 +61,15 @@ namespace GUITest
         public override void Update()
         {
             // 背景を青一色に
-            Context.Device.ImmediateContext.ClearRenderTargetView(Context.RenderTarget, new SlimDX.Color4(1, 0, 0, 1));
+            Context.Device.ImmediateContext.ClearRenderTargetView(Context.RenderTarget, new SlimDX.Color4(1, 0.39f, 0.58f, 0.93f));
+            // 深度バッファ
+            //Context.Device.ImmediateContext.ClearDepthStencilView()
 
             // 三角形をデバイスに入力
             Context.Device.ImmediateContext.InputAssembler.InputLayout = vertexLayout;
             Context.Device.ImmediateContext.InputAssembler.SetVertexBuffers(
                 0,
-                new VertexBufferBinding(vertexBuffer, sizeof(float) * 3, 0)
+                new VertexBufferBinding(vertexBuffer, VertexPositionColor.SizeInBytes, 0)
             );
             Context.Device.ImmediateContext.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
 
