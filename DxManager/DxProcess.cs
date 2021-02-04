@@ -25,7 +25,7 @@ namespace DxManager
         /// </summary>
         /// <param name="device">描画させるデバイス</param>
         /// <param name="shaderFile">シェーダーファイル Property.Resourceのものが指定できる</param>
-        public DxProcess(Device device, byte[] shaderFile) : this(device)
+        protected DxProcess(Device device, byte[] shaderFile) : this(device)
         {
             Effect = LoadEffect(shaderFile);
         }
@@ -35,7 +35,7 @@ namespace DxManager
         /// </summary>
         /// <param name="device">描画させるデバイス</param>
         /// <param name="shaderPath">シェーダーファイルのパス</param>
-        public DxProcess(Device device, string shaderPath) : this(device)
+        protected DxProcess(Device device, string shaderPath) : this(device)
         {
             Effect = LoadEffect(shaderPath);
         }
