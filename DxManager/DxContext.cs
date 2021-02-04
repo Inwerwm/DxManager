@@ -13,10 +13,13 @@ namespace DxManager
     /// </summary>
     public class DxContext : IDisposable
     {
+        #region フィールド
         private static DxContext instance;
         private bool disposedValue;
         private int refreshRate = 60;
+        #endregion
 
+        #region プロパティ
         /// <summary>
         /// 描画に使用するデバイス
         /// </summary>
@@ -52,6 +55,9 @@ namespace DxManager
                 }
             }
         }
+        #endregion
+
+        #region 初期処理
 
         /// <summary>
         /// インスタンスを取得する
@@ -92,6 +98,10 @@ namespace DxManager
 
             return (device, swapChain, renderTarget, depthStencil);
         }
+
+        #endregion
+
+        #region プロパティのインスタンスの作成
 
         private (Device device, SwapChain swapChain) CreateDeviceAndSwapChain()
         {
@@ -157,6 +167,10 @@ namespace DxManager
             return depthStencil;
         }
 
+        #endregion
+
+        #region 描画設定
+
         private void SetViewport(Device device)
         {
             device.ImmediateContext.Rasterizer.SetViewports(new Viewport
@@ -201,6 +215,10 @@ namespace DxManager
             );
         }
 
+        #endregion
+
+        #region 実行関数
+
         /// <summary>
         /// フォームの描画を開始
         /// </summary>
@@ -239,6 +257,10 @@ namespace DxManager
             SlimDX.Windows.MessagePump.Run(form, process.Update);
         }
 
+        #endregion
+
+        #region IDisposable
+
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
@@ -271,5 +293,7 @@ namespace DxManager
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
+
+        #endregion
     }
 }
