@@ -107,7 +107,33 @@ namespace DxManager
         /// </summary>
         /// <param name="form">描画するフォーム</param>
         /// <param name="process">描画処理の記述されたクラス</param>
-        public void Run(Form form, DxProcess process)
+        /// <param name="shaderPath">シェーダーファイルのパス</param>
+        public void Run(Form form, DxProcess process, string shaderPath)
+        {
+            using (ShaderBytecode shaderBytecode = ShaderBytecode.CompileFromFile(shaderPath, "fx_5_0", ShaderFlags.None, EffectFlags.None))
+                process.Effect = new Effect(Device, shaderBytecode);
+            Run(form, process);
+        }
+
+        /// <summary>
+        /// フォームの描画を開始
+        /// </summary>
+        /// <param name="form">描画するフォーム</param>
+        /// <param name="process">描画処理の記述されたクラス</param>
+        /// <param name="shaderFile">シェーダーファイル</param>
+        public void Run(Form form, DxProcess process, byte[] shaderFile)
+        {
+            using (ShaderBytecode shaderBytecode = ShaderBytecode.Compile(shaderFile, "fx_5_0", ShaderFlags.None, EffectFlags.None))
+                process.Effect = new Effect(Device, shaderBytecode);
+            Run(form, process);
+        }
+
+        /// <summary>
+        /// フォームの描画を開始
+        /// </summary>
+        /// <param name="form">描画するフォーム</param>
+        /// <param name="process">描画処理の記述されたクラス</param>
+        private void Run(Form form, DxProcess process)
         {
             process.Context = this;
             process.Init();
