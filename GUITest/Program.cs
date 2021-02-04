@@ -16,7 +16,11 @@ namespace GUITest
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FormMain());
+            // Application.Run(new FormMain());
+
+            var form = new FormMain();
+            var draw = new TestDrawProcess();
+            form.DxContext.Run(form, draw, Properties.Resources.Effect);
         }
     }
 }

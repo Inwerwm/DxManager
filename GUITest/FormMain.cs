@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DxManager;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,9 +13,13 @@ namespace GUITest
 {
     public partial class FormMain : Form
     {
+        public DxContext DxContext { get; }
+
         public FormMain()
         {
             InitializeComponent();
+
+            DxContext = DxContext.GetInstance(splitContainer1.Panel2);
         }
     }
 }
