@@ -18,14 +18,13 @@ namespace DxManager
         /// <summary>
         /// 描画デバイス
         /// </summary>
-        public DxContext Context { get; }
+        public DxContext Context { get; set; }
 
         /// <summary>
         /// シェーダーファイルを指定してインスタンスを作成
         /// </summary>
-        /// <param name="context">描画のためのコンテキスト</param>
         /// <param name="shaderFile">シェーダーファイル Property.Resourceのものが指定できる</param>
-        protected DxProcess(DxContext context, byte[] shaderFile) : this(context)
+        protected DxProcess(byte[] shaderFile)
         {
             Effect = LoadEffect(shaderFile);
         }
@@ -33,16 +32,10 @@ namespace DxManager
         /// <summary>
         /// シェーダーファイルを指定してインスタンスを作成
         /// </summary>
-        /// <param name="context">描画のためのコンテキスト</param>
         /// <param name="shaderPath">シェーダーファイルのパス</param>
-        protected DxProcess(DxContext context, string shaderPath) : this(context)
+        protected DxProcess(string shaderPath)
         {
             Effect = LoadEffect(shaderPath);
-        }
-
-        private DxProcess(DxContext context)
-        {
-            Context = context;
         }
 
         /// <summary>

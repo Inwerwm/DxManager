@@ -109,6 +109,7 @@ namespace DxManager
         /// <param name="process">描画処理の記述されたクラス</param>
         public void Run(Form form, DxProcess process)
         {
+            process.Context = this;
             process.Init();
             SlimDX.Windows.MessagePump.Run(form, process.Update);
         }
