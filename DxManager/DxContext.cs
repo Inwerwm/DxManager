@@ -173,11 +173,15 @@ namespace DxManager
 
         private void SetViewport(Device device)
         {
+            var smallerEdge = TargetControl.Width > TargetControl.Height ? TargetControl.Height : TargetControl.Width;
             device.ImmediateContext.Rasterizer.SetViewports(new Viewport
             {
-                Width = TargetControl.Width,
-                Height = TargetControl.Height,
-                MaxZ = 1
+                Width = smallerEdge,
+                Height = smallerEdge,
+                X = (TargetControl.Width - smallerEdge) / 2,
+                Y = (TargetControl.Height - smallerEdge) / 2,
+                MinZ = 0,
+                MaxZ = 1,
             }
             );
         }
