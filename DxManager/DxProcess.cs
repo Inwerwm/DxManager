@@ -1,4 +1,5 @@
-﻿using SlimDX.Direct3D11;
+﻿using SlimDX.D3DCompiler;
+using SlimDX.Direct3D11;
 using System;
 
 namespace DxManager
@@ -20,14 +21,50 @@ namespace DxManager
         public Device Device { get; }
 
         /// <summary>
-        /// コンストラクタ
+        /// シェーダーファイルを指定してインスタンスを作成
         /// </summary>
-        /// <param name="device">使用するデバイス</param>
-        /// <param name="effect">使用するエフェクト</param>
-        protected DxProcess(Device device, Effect effect)
+        /// <param name="device">描画させるデバイス</param>
+        /// <param name="shaderFile">シェーダーファイル Property.Resourceのものが指定できる</param>
+        public DxProcess(Device device, byte[] shaderFile) : this(device)
+        {
+            Effect = LoadEffect(shaderFile);
+        }
+
+        /// <summary>
+        /// シェーダーファイルを指定してインスタンスを作成
+        /// </summary>
+        /// <param name="device">描画させるデバイス</param>
+        /// <param name="shaderPath">シェーダーファイルのパス</param>
+        public DxProcess(Device device, string shaderPath) : this(device)
+        {
+            Effect = LoadEffect(shaderPath);
+        }
+
+        private DxProcess(Device device)
         {
             Device = device;
-            Effect = effect;
+        }
+
+        /// <summary>
+        /// シェーダーファイルからエフェクトを読み込む
+        /// </summary>
+        /// <param name="shaderPath">シェーダーのパス</param>
+        /// <returns>エフェクト</returns>
+        protected Effect LoadEffect(string shaderPath)
+        {
+            using (ShaderBytecode shaderBytecode = ShaderBytecode.CompileFromFile(shaderPath, "fx_5_0", ShaderFlags.None, EffectFlags.None))
+                return new Effect(Device, shaderBytecode);
+        }
+
+        /// <summary>
+        /// シェーダーファイルからエフェクトを読み込む
+        /// </summary>
+        /// <param name="shaderFile">シェーダーのバイト列 Property.Resourceを想定</param>
+        /// <returns>エフェクト</returns>
+        protected Effect LoadEffect(byte[] shaderFile)
+        {
+            using (ShaderBytecode shaderBytecode = ShaderBytecode.Compile(shaderFile, "fx_5_0", ShaderFlags.None, EffectFlags.None))
+                return new Effect(Device, shaderBytecode);
         }
 
         /// <summary>

@@ -32,10 +32,6 @@ namespace DxManager
         /// 描画対象
         /// </summary>
         public RenderTargetView RenderTarget { get;}
-        /// <summary>
-        /// 描画エフェクト
-        /// </summary>
-        public Effect Effect { get; private set; }
 
         /// <summary>
         /// 描画対象のフォームコントロール
@@ -104,28 +100,6 @@ namespace DxManager
             device.ImmediateContext.Rasterizer.SetViewports(new Viewport { Width = TargetControl.Width, Height = TargetControl.Height });
 
             return (device, swapChain, renderTarget);
-        }
-
-        /// <summary>
-        /// シェーダーファイルからエフェクトを読み込む
-        /// </summary>
-        /// <param name="shaderPath">シェーダーのパス</param>
-        /// <returns>エフェクト</returns>
-        public Effect LoadEffect(string shaderPath)
-        {
-            using (ShaderBytecode shaderBytecode = ShaderBytecode.CompileFromFile(shaderPath, "fx_5_0", ShaderFlags.None, EffectFlags.None))
-                return new Effect(Device, shaderBytecode);
-        }
-
-        /// <summary>
-        /// シェーダーファイルからエフェクトを読み込む
-        /// </summary>
-        /// <param name="shaderFile">シェーダーのバイト列 Property.Resourceを想定</param>
-        /// <returns>エフェクト</returns>
-        public Effect LoadEffect(byte[] shaderFile)
-        {
-            using (ShaderBytecode shaderBytecode = ShaderBytecode.Compile(shaderFile, "fx_5_0", ShaderFlags.None, EffectFlags.None))
-                return new Effect(Device, shaderBytecode);
         }
 
         /// <summary>
