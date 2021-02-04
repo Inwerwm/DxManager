@@ -31,12 +31,20 @@ namespace DxManager
         /// <summary>
         /// 描画対象
         /// </summary>
-        public RenderTargetView RenderTarget { get;}
+        public RenderTargetView RenderTarget { get; private set; }
+        /// <summary>
+        /// 深度バッファ
+        /// </summary>
+        public DepthStencilView DepthStencil { get; private set; }
 
         /// <summary>
         /// 描画対象のフォームコントロール
         /// </summary>
         public Control TargetControl { get; }
+        /// <summary>
+        /// リフレッシュレート
+        /// </summary>
+        public int RefreshRate { get; set; } = 60;
 
         /// <summary>
         /// インスタンスを取得する
@@ -53,53 +61,117 @@ namespace DxManager
         {
             TargetControl = targetControl;
 
-            (Device, SwapChain, RenderTarget) = InitializeProperties();
+            (Device, SwapChain, RenderTarget, DepthStencil) = InitializeProperties();
         }
 
-        private (Device, SwapChain, RenderTargetView) InitializeProperties()
+        private (Device, SwapChain, RenderTargetView, DepthStencilView) InitializeProperties()
         {
             Device device;
             SwapChain swapChain;
             RenderTargetView renderTarget;
+            DepthStencilView depthStencil;
 
             // DeviceとSwapChain
-            Device.CreateWithSwapChain(
-                DriverType.Hardware,
-                DeviceCreationFlags.None,
-                new SwapChainDescription
-                {
-                    BufferCount = 1,
-                    OutputHandle = TargetControl.Handle,
-                    IsWindowed = true,
-                    SampleDescription = new SampleDescription
-                    {
-                        Count = 1,
-                        Quality = 0
-                    },
-                    ModeDescription = new ModeDescription
-                    {
-                        Width = TargetControl.ClientSize.Width,
-                        Height = TargetControl.ClientSize.Height,
-                        RefreshRate = new SlimDX.Rational(60, 1),
-                        Format = Format.R8G8B8A8_UNorm
-                    },
-                    Usage = Usage.RenderTargetOutput
-                },
-                out device,
-                out swapChain
-            );
+            (device, swapChain) = CreateDeviceAndSwapChain();
 
             // RenderTarget
+            renderTarget = CreateRenderTarget(device, swapChain);
+
+            // DepthStencil
+            depthStencil = CreateDepthStencil(device);
+
+            // Viewport
+            SetViewport(device);
+
+            return (device, swapChain, renderTarget, depthStencil);
+        }
+
+        private (Device device, SwapChain swapChain) CreateDeviceAndSwapChain()
+        {
+            Device device;
+            SwapChain swapChain;
+
+            Device.CreateWithSwapChain(
+                            DriverType.Hardware,
+                            DeviceCreationFlags.None,
+                            new SwapChainDescription
+                            {
+                                BufferCount = 1,
+                                OutputHandle = TargetControl.Handle,
+                                IsWindowed = true,
+                                SampleDescription = new SampleDescription
+                                {
+                                    Count = 1,
+                                    Quality = 0
+                                },
+                                ModeDescription = new ModeDescription
+                                {
+                                    Width = TargetControl.ClientSize.Width,
+                                    Height = TargetControl.ClientSize.Height,
+                                    RefreshRate = new SlimDX.Rational(RefreshRate, 1),
+                                    Format = Format.R8G8B8A8_UNorm,
+                                },
+                                Usage = Usage.RenderTargetOutput,
+                                Flags = SwapChainFlags.AllowModeSwitch
+                            },
+                            out device,
+                            out swapChain
+                        );
+            return (device, swapChain);
+        }
+
+        private static RenderTargetView CreateRenderTarget(Device device, SwapChain swapChain)
+        {
+            RenderTargetView renderTarget;
             using (Texture2D backBuffer = SlimDX.Direct3D11.Resource.FromSwapChain<Texture2D>(swapChain, 0))
             {
                 renderTarget = new RenderTargetView(device, backBuffer);
                 device.ImmediateContext.OutputMerger.SetTargets(renderTarget);
             }
 
-            // Viewport
-            device.ImmediateContext.Rasterizer.SetViewports(new Viewport { Width = TargetControl.Width, Height = TargetControl.Height });
+            return renderTarget;
+        }
 
-            return (device, swapChain, renderTarget);
+        private DepthStencilView CreateDepthStencil(Device device)
+        {
+            DepthStencilView depthStencil;
+            Texture2DDescription depthBufferDesc = new Texture2DDescription
+            {
+                ArraySize = 1,
+                BindFlags = BindFlags.DepthStencil,
+                Format = Format.D32_Float,
+                Width = TargetControl.ClientSize.Width,
+                Height = TargetControl.ClientSize.Height,
+                MipLevels = 1,
+                SampleDescription = new SampleDescription(1, 0)
+            };
+            using (Texture2D depthBuffer = new Texture2D(device, depthBufferDesc))
+                depthStencil = new DepthStencilView(device, depthBuffer);
+            return depthStencil;
+        }
+
+        private void SetViewport(Device device)
+        {
+            device.ImmediateContext.Rasterizer.SetViewports(new Viewport
+            {
+                Width = TargetControl.Width,
+                Height = TargetControl.Height,
+                MaxZ = 1
+            }
+            );
+        }
+
+        /// <summary>
+        /// 描画解像度の更新
+        /// </summary>
+        public void ResizeResolution()
+        {
+            RenderTarget?.Dispose();
+            SwapChain.ResizeBuffers(1, TargetControl.Width, TargetControl.Height, Format.R8G8B8A8_UNorm, SwapChainFlags.AllowModeSwitch);
+            RenderTarget = CreateRenderTarget(Device, SwapChain);
+            DepthStencil?.Dispose();
+            DepthStencil = CreateDepthStencil(Device);
+            SetViewport(Device);
         }
 
         /// <summary>
