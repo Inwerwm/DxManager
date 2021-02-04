@@ -28,17 +28,17 @@ namespace GUITest
                 new[] {
                     new VertexPositionColor
                     {
-                        Position = new Vector3(0, 0.5f, 0),
+                        Position = new Vector3(0, 0, 0),
                         Color = new Vector3(1, 1, 1)
                     },
                     new VertexPositionColor
                     {
-                        Position = new Vector3(0.5f, 0, 0),
+                        Position = new Vector3(0, 1, 0),
                         Color = new Vector3(0, 0, 1)
                     },
                     new VertexPositionColor
                     {
-                        Position = new Vector3(-0.5f, 0, 0),
+                        Position = new Vector3(1, 0, 0),
                         Color = new Vector3(1, 0, 0)
                     }
                 },
@@ -58,10 +58,10 @@ namespace GUITest
             }
         }
 
-        public override void Update()
+        public override void Draw()
         {
             // 背景を青一色に
-            Context.Device.ImmediateContext.ClearRenderTargetView(Context.RenderTarget, new SlimDX.Color4(1, 0.39f, 0.58f, 0.93f));
+            //Context.Device.ImmediateContext.ClearRenderTargetView(Context.RenderTarget, new SlimDX.Color4(1, 0.39f, 0.58f, 0.93f));
             // 深度バッファ
             //Context.Device.ImmediateContext.ClearDepthStencilView()
 

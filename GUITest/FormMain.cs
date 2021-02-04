@@ -24,7 +24,23 @@ namespace GUITest
 
         private void splitContainer1_Panel2_ClientSizeChanged(object sender, EventArgs e)
         {
-            DxContext?.ResizeResolution();
+            DxContext?.ChangeResolution();
         }
+
+        private void buttonFps10_Click(object sender, EventArgs e)
+        {
+            DxContext.RefreshRate = 10;
+        }
+
+        private void buttonFps60_Click(object sender, EventArgs e)
+        {
+            DxContext.RefreshRate = 60;
+        }
+
+        private void buttonFps144_Click(object sender, EventArgs e)
+        {
+            DxContext.RefreshRate = 144;
+        }
+
     }
 }
