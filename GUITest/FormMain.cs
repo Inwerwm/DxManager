@@ -21,5 +21,10 @@ namespace GUITest
 
             DxContext = DxContext.GetInstance(splitContainer1.Panel2);
         }
+
+        private void splitContainer1_Panel2_ClientSizeChanged(object sender, EventArgs e)
+        {
+            DxContext?.ResizeResolution();
+        }
     }
 }
