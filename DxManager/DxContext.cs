@@ -2,10 +2,6 @@
 using SlimDX.Direct3D11;
 using SlimDX.DXGI;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Device = SlimDX.Direct3D11.Device;
 
@@ -19,6 +15,7 @@ namespace DxManager
     {
         private static DxContext instance;
         private bool disposedValue;
+        private int refreshRate = 60;
 
         /// <summary>
         /// 描画に使用するデバイス
@@ -44,7 +41,17 @@ namespace DxManager
         /// <summary>
         /// リフレッシュレート
         /// </summary>
-        public int RefreshRate { get; set; } = 60;
+        public int RefreshRate
+        {
+            get => refreshRate;
+            set {
+                refreshRate = value;
+                if(!(SwapChain is null))
+                {
+                    ChangeRefreshRate();
+                }
+            }
+        }
 
         /// <summary>
         /// インスタンスを取得する
@@ -162,16 +169,36 @@ namespace DxManager
         }
 
         /// <summary>
-        /// 描画解像度の更新
+        /// 描画サイズを現在のTargetControlのサイズに変更
         /// </summary>
-        public void ResizeResolution()
+        public void ChangeResolution()
+        {
+            ChangeResolution(TargetControl.Width, TargetControl.Height);
+        }
+
+        /// <summary>
+        /// 描画サイズの変更
+        /// </summary>
+        public void ChangeResolution(int width, int height)
         {
             RenderTarget?.Dispose();
-            SwapChain.ResizeBuffers(1, TargetControl.Width, TargetControl.Height, Format.R8G8B8A8_UNorm, SwapChainFlags.AllowModeSwitch);
+            SwapChain.ResizeBuffers(1, width, height, Format.R8G8B8A8_UNorm, SwapChainFlags.AllowModeSwitch);
             RenderTarget = CreateRenderTarget(Device, SwapChain);
             DepthStencil?.Dispose();
             DepthStencil = CreateDepthStencil(Device);
             SetViewport(Device);
+        }
+
+        private void ChangeRefreshRate()
+        {
+            SwapChain.ResizeTarget(new ModeDescription()
+            {
+                Width = SwapChain.Description.ModeDescription.Width,
+                Height = SwapChain.Description.ModeDescription.Height,
+                RefreshRate = new SlimDX.Rational(RefreshRate, 1),
+                Format = SwapChain.Description.ModeDescription.Format,
+            }
+            );
         }
 
         /// <summary>

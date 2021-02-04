@@ -1,6 +1,7 @@
-﻿using SlimDX.D3DCompiler;
-using SlimDX.Direct3D11;
+﻿using SlimDX.Direct3D11;
 using System;
+using System.Diagnostics;
+using System.Threading;
 
 namespace DxManager
 {
@@ -19,6 +20,7 @@ namespace DxManager
         /// 描画デバイス
         /// </summary>
         public DxContext Context { get; set; }
+        private Stopwatch Stopwatch { get; } = new Stopwatch();
 
         /// <summary>
         /// 初期化処理
@@ -27,7 +29,29 @@ namespace DxManager
         /// <summary>
         /// フレームごとの描画処理 
         /// </summary>
-        public abstract void Update();
+        public abstract void Draw();
+
+        /// <summary>
+        /// フレームごとの更新処理
+        /// </summary>
+        public void Update()
+        {
+            Stopwatch.Restart();
+            Draw();
+            Stopwatch.Stop();
+            WaitTime();
+        }
+        private void WaitTime()
+        {
+            var processingTime = Stopwatch.ElapsedMilliseconds;
+            var refreshRateTime = 1.0 / Context.RefreshRate * 1000;
+
+            var idleTime = refreshRateTime - processingTime;
+            if (idleTime < 0)
+                return;
+
+            Thread.Sleep((int)idleTime);
+        }
 
         protected virtual void Dispose(bool disposing)
         {
