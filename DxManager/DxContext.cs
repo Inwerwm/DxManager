@@ -15,9 +15,9 @@ namespace DxManager
     /// SlimDXをWinformで使用するためのラッパー
     /// <para>シングルトン</para>
     /// </summary>
-    public class DxFrame : IDisposable
+    public class DxContext : IDisposable
     {
-        private static DxFrame instance;
+        private static DxContext instance;
         private bool disposedValue;
 
         /// <summary>
@@ -43,13 +43,13 @@ namespace DxManager
         /// </summary>
         /// <param name="targetControl">描画対象コントロール</param>
         /// <returns>シングルトンなインスタンス</returns>
-        public static DxFrame GetInstance(Control targetControl)
+        public static DxContext GetInstance(Control targetControl)
         {
-            instance = instance ?? new DxFrame(targetControl);
+            instance = instance ?? new DxContext(targetControl);
             return instance;
         }
 
-        private DxFrame(Control targetControl)
+        private DxContext(Control targetControl)
         {
             TargetControl = targetControl;
 
@@ -133,7 +133,7 @@ namespace DxManager
         }
 
         // 'Dispose(bool disposing)' にアンマネージド リソースを解放するコードが含まれる場合にのみ、ファイナライザーをオーバーライドします
-        ~DxFrame()
+        ~DxContext()
         {
             // このコードを変更しないでください。クリーンアップ コードを 'Dispose(bool disposing)' メソッドに記述します
             Dispose(disposing: false);
