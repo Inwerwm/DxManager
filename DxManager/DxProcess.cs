@@ -18,14 +18,14 @@ namespace DxManager
         /// <summary>
         /// 描画デバイス
         /// </summary>
-        public Device Device { get; }
+        public DxContext Context { get; }
 
         /// <summary>
         /// シェーダーファイルを指定してインスタンスを作成
         /// </summary>
-        /// <param name="device">描画させるデバイス</param>
+        /// <param name="context">描画のためのコンテキスト</param>
         /// <param name="shaderFile">シェーダーファイル Property.Resourceのものが指定できる</param>
-        protected DxProcess(Device device, byte[] shaderFile) : this(device)
+        protected DxProcess(DxContext context, byte[] shaderFile) : this(context)
         {
             Effect = LoadEffect(shaderFile);
         }
@@ -33,16 +33,16 @@ namespace DxManager
         /// <summary>
         /// シェーダーファイルを指定してインスタンスを作成
         /// </summary>
-        /// <param name="device">描画させるデバイス</param>
+        /// <param name="context">描画のためのコンテキスト</param>
         /// <param name="shaderPath">シェーダーファイルのパス</param>
-        protected DxProcess(Device device, string shaderPath) : this(device)
+        protected DxProcess(DxContext context, string shaderPath) : this(context)
         {
             Effect = LoadEffect(shaderPath);
         }
 
-        private DxProcess(Device device)
+        private DxProcess(DxContext context)
         {
-            Device = device;
+            Context = context;
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace DxManager
         protected Effect LoadEffect(string shaderPath)
         {
             using (ShaderBytecode shaderBytecode = ShaderBytecode.CompileFromFile(shaderPath, "fx_5_0", ShaderFlags.None, EffectFlags.None))
-                return new Effect(Device, shaderBytecode);
+                return new Effect(Context.Device, shaderBytecode);
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace DxManager
         protected Effect LoadEffect(byte[] shaderFile)
         {
             using (ShaderBytecode shaderBytecode = ShaderBytecode.Compile(shaderFile, "fx_5_0", ShaderFlags.None, EffectFlags.None))
-                return new Effect(Device, shaderBytecode);
+                return new Effect(Context.Device, shaderBytecode);
         }
 
         /// <summary>
