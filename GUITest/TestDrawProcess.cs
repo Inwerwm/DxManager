@@ -60,8 +60,8 @@ namespace GUITest
 
         public override void Draw()
         {
-            // 背景を青一色に
-            //Context.Device.ImmediateContext.ClearRenderTargetView(Context.RenderTarget, new SlimDX.Color4(1, 0.39f, 0.58f, 0.93f));
+            // 背景を灰色に
+            Context.Device.ImmediateContext.ClearRenderTargetView(Context.RenderTarget, new SlimDX.Color4(1.0f, 0.3f, 0.3f, 0.3f));
             // 深度バッファ
             //Context.Device.ImmediateContext.ClearDepthStencilView()
 
