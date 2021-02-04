@@ -15,6 +15,7 @@ namespace GUITest
 
         public override void Init()
         {
+            // 頂点情報のフォーマットを設定
             vertexLayout = new InputLayout(
                 Context.Device,
                 Effect.GetTechniqueByIndex(0).GetPassByIndex(0).Description.Signature,
@@ -27,6 +28,7 @@ namespace GUITest
                 }
             );
 
+            // 頂点バッファに頂点を追加
             using (SlimDX.DataStream vertexStream = new SlimDX.DataStream(
                 new[] {
                     new SlimDX.Vector3(0, 0.5f, 0),
@@ -51,8 +53,10 @@ namespace GUITest
 
         public override void Update()
         {
+            // 背景を青一色に
             Context.Device.ImmediateContext.ClearRenderTargetView(Context.RenderTarget, new SlimDX.Color4(1, 0, 0, 1));
 
+            // 三角形をデバイスに入力
             Context.Device.ImmediateContext.InputAssembler.InputLayout = vertexLayout;
             Context.Device.ImmediateContext.InputAssembler.SetVertexBuffers(
                 0,
@@ -60,9 +64,11 @@ namespace GUITest
             );
             Context.Device.ImmediateContext.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
 
+            // 三角形を描画
             Effect.GetTechniqueByIndex(0).GetPassByIndex(0).Apply(Context.Device.ImmediateContext);
             Context.Device.ImmediateContext.Draw(3, 0);
 
+            // 描画内容を反映
             Context.SwapChain.Present(0, SlimDX.DXGI.PresentFlags.None);
         }
     }
