@@ -55,6 +55,10 @@ namespace DxManager
                 }
             }
         }
+        /// <summary>
+        /// 描画処理のハンドル
+        /// </summary>
+        private EventHandler Drawloop { get; set; }
         #endregion
 
         #region 初期処理
@@ -222,7 +226,45 @@ namespace DxManager
 
         #endregion
 
-        #region 実行関数
+        #region 実行処理
+        private void InitializeProcess(DxProcess process)
+        {
+            process.Context = this;
+            process.Init();
+        }
+        private void CompileShader(DxProcess process, string shaderPath)
+        {
+            using (ShaderBytecode shaderBytecode = ShaderBytecode.CompileFromFile(shaderPath, "fx_5_0", ShaderFlags.None, EffectFlags.None))
+                process.Effect = new Effect(Device, shaderBytecode);
+        }
+        private void CompileShader(DxProcess process, byte[] shaderFile)
+        {
+            using (ShaderBytecode shaderBytecode = ShaderBytecode.Compile(shaderFile, "fx_5_0", ShaderFlags.None, EffectFlags.None))
+                process.Effect = new Effect(Device, shaderBytecode);
+        }
+
+        /// <summary>
+        /// SlimDXによる描画処理を開始する
+        /// </summary>
+        public void StartDrawLoop()
+        {
+            Application.Idle += Drawloop;
+        }
+        /// <summary>
+        /// SlimDXによる描画処理を停止する
+        /// </summary>
+        public void StopDrawLoop()
+        {
+            Application.Idle -= Drawloop;
+        }
+        /// <summary>
+        /// フォームの描画を開始
+        /// </summary>
+        /// <param name="form">描画するフォーム</param>
+        public void Run(Form form)
+        {
+            Application.Run(form);
+        }
 
         /// <summary>
         /// フォームの描画を開始
@@ -232,9 +274,9 @@ namespace DxManager
         /// <param name="shaderPath">シェーダーファイルのパス</param>
         public void Run(Form form, DxProcess process, string shaderPath)
         {
-            using (ShaderBytecode shaderBytecode = ShaderBytecode.CompileFromFile(shaderPath, "fx_5_0", ShaderFlags.None, EffectFlags.None))
-                process.Effect = new Effect(Device, shaderBytecode);
-            Run(form, process);
+            CompileShader(process, shaderPath);
+            CreateDrawloop(process);
+            Run(form);
         }
 
         /// <summary>
@@ -245,23 +287,78 @@ namespace DxManager
         /// <param name="shaderFile">シェーダーファイル</param>
         public void Run(Form form, DxProcess process, byte[] shaderFile)
         {
-            using (ShaderBytecode shaderBytecode = ShaderBytecode.Compile(shaderFile, "fx_5_0", ShaderFlags.None, EffectFlags.None))
-                process.Effect = new Effect(Device, shaderBytecode);
-            Run(form, process);
+            CompileShader(process, shaderFile);
+            CreateDrawloop(process);
+            Run(form);
         }
-
         /// <summary>
-        /// フォームの描画を開始
+        /// フォームの描画にSlimDXによる描画を追加する
         /// </summary>
-        /// <param name="form">描画するフォーム</param>
         /// <param name="process">描画処理の記述されたクラス</param>
-        private void Run(Form form, DxProcess process)
+        /// <param name="shaderPath">シェーダーファイルのパス</param>
+        public void AddDrawloop(DxProcess process, string shaderPath)
         {
-            process.Context = this;
-            process.Init();
-            SlimDX.Windows.MessagePump.Run(form, process.Update);
+            CompileShader(process, shaderPath);
+            CreateDrawloop(process);
+            StartDrawLoop();
+        }
+        /// <summary>
+        /// フォームの描画にSlimDXによる描画を追加する
+        /// </summary>
+        /// <param name="process">描画処理の記述されたクラス</param>
+        /// <param name="shaderFile">シェーダーファイル</param>
+        public void AddDrawloop(DxProcess process, byte[] shaderFile)
+        {
+            CompileShader(process, shaderFile);
+            CreateDrawloop(process);
+            StartDrawLoop();
         }
 
+        private void CreateDrawloop(DxProcess process)
+        {
+            InitializeProcess(process);
+            Drawloop = (sender, e) =>
+            {
+                while (AppStillIdle)
+                {
+                    process.Update();
+                }
+            };
+        }
+
+        #endregion
+
+        #region Win32API
+        struct Message
+        {
+            public System.IntPtr hWnd;
+            public uint msg;
+            public System.IntPtr wParam;
+            public System.IntPtr lParam;
+            public uint time;
+            public System.Drawing.Point pt;
+        }
+
+        class Win32Api
+        {
+            [System.Security.SuppressUnmanagedCodeSecurity] //for performance
+            [System.Runtime.InteropServices.DllImport("user32.dll")]
+            public static extern bool PeekMessage(
+                out Message msg,
+                System.IntPtr hWnd,
+                uint messageFilterMin,
+                uint messageFilterMax,
+                uint flags
+                );
+        }
+        bool AppStillIdle
+        {
+            get
+            {
+                Message msg;
+                return !Win32Api.PeekMessage(out msg, System.IntPtr.Zero, 0, 0, 0);
+            }
+        }
         #endregion
 
         #region IDisposable
