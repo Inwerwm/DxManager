@@ -1,4 +1,5 @@
-﻿using SlimDX.D3DCompiler;
+﻿using DxManager.Camera;
+using SlimDX.D3DCompiler;
 using SlimDX.Direct3D11;
 using SlimDX.DXGI;
 using System;
@@ -36,7 +37,6 @@ namespace DxManager
         /// 深度バッファ
         /// </summary>
         public DepthStencilView DepthStencil { get; private set; }
-
         /// <summary>
         /// 描画対象のフォームコントロール
         /// </summary>
