@@ -17,7 +17,7 @@ namespace DxManager.Camera
         /// <summary>
         /// ビューボリュームの(幅, 高)
         /// </summary>
-        public (float Width, int Height) ViewVolumeArea { get; set; }
+        public (float Width, int Height) ViewVolumeSize { get; set; }
         /// <summary>
         /// ビューボリュームのZの(最小, 最大)
         /// </summary>
@@ -29,9 +29,9 @@ namespace DxManager.Camera
             switch (Hand)
             {
                 case HandedSystem.Right:
-                    return view * Matrix.OrthoRH(ViewVolumeArea.Width, ViewVolumeArea.Height, ViewVolumeDepth.Near, ViewVolumeDepth.Far);
+                    return view * Matrix.OrthoRH(ViewVolumeSize.Width, ViewVolumeSize.Height, ViewVolumeDepth.Near, ViewVolumeDepth.Far);
                 case HandedSystem.Left:
-                    return view * Matrix.OrthoLH(ViewVolumeArea.Width, ViewVolumeArea.Height, ViewVolumeDepth.Near, ViewVolumeDepth.Far);
+                    return view * Matrix.OrthoLH(ViewVolumeSize.Width, ViewVolumeSize.Height, ViewVolumeDepth.Near, ViewVolumeDepth.Far);
                 default:
                     throw new InvalidOperationException();
             }
