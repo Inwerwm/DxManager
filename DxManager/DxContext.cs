@@ -246,8 +246,10 @@ namespace DxManager
         /// <summary>
         /// SlimDXによる描画処理を開始する
         /// </summary>
-        public void StartDrawLoop()
+        /// <param name="process">実行する描画処理</param>
+        public void StartDrawLoop(DxProcess process)
         {
+            InitializeProcess(process);
             Application.Idle += Drawloop;
         }
         /// <summary>
@@ -261,8 +263,10 @@ namespace DxManager
         /// フォームの描画を開始
         /// </summary>
         /// <param name="form">描画するフォーム</param>
-        public void Run(Form form)
+        /// <param name="process">実行する描画処理</param>
+        public void Run(Form form, DxProcess process)
         {
+            InitializeProcess(process);
             Application.Run(form);
         }
 
@@ -276,7 +280,7 @@ namespace DxManager
         {
             CompileShader(process, shaderPath);
             CreateDrawloop(process);
-            Run(form);
+            Run(form, process);
         }
 
         /// <summary>
@@ -289,7 +293,7 @@ namespace DxManager
         {
             CompileShader(process, shaderFile);
             CreateDrawloop(process);
-            Run(form);
+            Run(form, process);
         }
         /// <summary>
         /// フォームの描画にSlimDXによる描画を追加する
@@ -300,7 +304,7 @@ namespace DxManager
         {
             CompileShader(process, shaderPath);
             CreateDrawloop(process);
-            StartDrawLoop();
+            StartDrawLoop(process);
         }
         /// <summary>
         /// フォームの描画にSlimDXによる描画を追加する
@@ -311,12 +315,11 @@ namespace DxManager
         {
             CompileShader(process, shaderFile);
             CreateDrawloop(process);
-            StartDrawLoop();
+            StartDrawLoop(process);
         }
 
         private void CreateDrawloop(DxProcess process)
         {
-            InitializeProcess(process);
             Drawloop = (sender, e) =>
             {
                 while (AppStillIdle)
