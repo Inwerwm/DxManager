@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DxManager.Camera
 {
-    class DxCameraOrthographic : DxCamera
+    public class DxCameraOrthographic : DxCamera
     {
         public override DxProjectionType ProjectionType => DxProjectionType.Orthographic;
 
