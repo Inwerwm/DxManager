@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DxManager.Camera;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,9 +20,8 @@ namespace GUITest
             // Application.Run(new FormMain());
 
             using (var form = new FormMain())
-            using (var draw = new TestDrawProcess())
             {
-                form.DxContext.Run(form, draw, Properties.Resources.Effect);
+                form.DxContext.Run(form, form.Process, Properties.Resources.Effect);
             }
         }
     }

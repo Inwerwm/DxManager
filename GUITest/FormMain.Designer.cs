@@ -18,6 +18,7 @@ namespace GUITest
             {
                 components.Dispose();
             }
+            Process?.Dispose();
             base.Dispose(disposing);
         }
 
