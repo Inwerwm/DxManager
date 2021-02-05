@@ -1,4 +1,5 @@
-﻿using SlimDX.Direct3D11;
+﻿using DxManager.Camera;
+using SlimDX.Direct3D11;
 using System;
 using System.Diagnostics;
 using System.Threading;
@@ -20,6 +21,11 @@ namespace DxManager
         /// 描画デバイス
         /// </summary>
         public DxContext Context { get; set; }
+        /// <summary>
+        /// カメラ
+        /// </summary>
+        public DxCamera Camera { get; set; }
+
         private Stopwatch Stopwatch { get; } = new Stopwatch();
 
         /// <summary>
@@ -37,6 +43,7 @@ namespace DxManager
         public void Update()
         {
             Stopwatch.Restart();
+            UpdateCamera();
             Draw();
             Stopwatch.Stop();
             WaitTime();
@@ -51,6 +58,13 @@ namespace DxManager
                 return;
 
             Thread.Sleep((int)idleTime);
+        }
+        /// <summary>
+        /// カメラ更新処理
+        /// </summary>
+        protected void UpdateCamera()
+        {
+            Effect.GetVariableByName("ViewProjection").AsMatrix().SetMatrix(Camera.GetMatrix());
         }
 
         protected virtual void Dispose(bool disposing)
