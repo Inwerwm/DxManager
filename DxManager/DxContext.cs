@@ -88,17 +88,12 @@ namespace DxManager
             RenderTargetView renderTarget;
             DepthStencilView depthStencil;
 
-            // DeviceとSwapChain
             (device, swapChain) = CreateDeviceAndSwapChain();
-
-            // RenderTarget
             renderTarget = CreateRenderTarget(device, swapChain);
-
-            // DepthStencil
             depthStencil = CreateDepthStencil(device);
 
-            // Viewport
             SetViewport(device);
+            SetBlend(device);
 
             return (device, swapChain, renderTarget, depthStencil);
         }
@@ -187,6 +182,31 @@ namespace DxManager
                 MaxZ = 1,
             }
             );
+        }
+
+        private void SetBlend(Device device)
+        {
+            var blendStateDesc = new BlendStateDescription()
+            {
+                AlphaToCoverageEnable = false,
+                IndependentBlendEnable = false
+            };
+
+            blendStateDesc.RenderTargets[0] = new RenderTargetBlendDescription()
+            {
+                BlendEnable = true,
+                BlendOperation = BlendOperation.Add,
+                BlendOperationAlpha = BlendOperation.Add,
+                DestinationBlend = BlendOption.InverseSourceAlpha,
+                DestinationBlendAlpha = BlendOption.Zero,
+                RenderTargetWriteMask = ColorWriteMaskFlags.All,
+                SourceBlend = BlendOption.SourceAlpha,
+                SourceBlendAlpha = BlendOption.One
+            };
+
+            device.ImmediateContext.OutputMerger.BlendFactor = new SlimDX.Color4(1, 1, 1, 1);
+            device.ImmediateContext.OutputMerger.BlendSampleMask = 0xffffff;
+            device.ImmediateContext.OutputMerger.BlendState = BlendState.FromDescription(device, blendStateDesc);
         }
 
         /// <summary>
