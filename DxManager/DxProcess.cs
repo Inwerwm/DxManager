@@ -62,7 +62,7 @@ namespace DxManager
         /// <summary>
         /// カメラ更新処理
         /// </summary>
-        protected void UpdateCamera()
+        protected virtual void UpdateCamera()
         {
             Effect.GetVariableByName("ViewProjection").AsMatrix().SetMatrix(Camera.GetMatrix());
         }
