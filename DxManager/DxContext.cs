@@ -1,5 +1,4 @@
-﻿using DxManager.Camera;
-using SlimDX.D3DCompiler;
+﻿using SlimDX.D3DCompiler;
 using SlimDX.Direct3D11;
 using SlimDX.DXGI;
 using System;
@@ -47,9 +46,10 @@ namespace DxManager
         public int RefreshRate
         {
             get => refreshRate;
-            set {
+            set
+            {
                 refreshRate = value;
-                if(!(SwapChain is null))
+                if (!(SwapChain is null))
                 {
                     ChangeRefreshRate();
                 }
@@ -111,33 +111,31 @@ namespace DxManager
         {
             Device device;
             SwapChain swapChain;
+            int sample = 2;
 
-            Device.CreateWithSwapChain(
-                            DriverType.Hardware,
-                            DeviceCreationFlags.None,
-                            new SwapChainDescription
-                            {
-                                BufferCount = 1,
-                                OutputHandle = TargetControl.Handle,
-                                IsWindowed = true,
-                                SampleDescription = new SampleDescription
-                                {
-                                    Count = 1,
-                                    Quality = 0
-                                },
-                                ModeDescription = new ModeDescription
-                                {
-                                    Width = TargetControl.ClientSize.Width,
-                                    Height = TargetControl.ClientSize.Height,
-                                    RefreshRate = new SlimDX.Rational(RefreshRate, 1),
-                                    Format = Format.R8G8B8A8_UNorm,
-                                },
-                                Usage = Usage.RenderTargetOutput,
-                                Flags = SwapChainFlags.AllowModeSwitch
-                            },
-                            out device,
-                            out swapChain
-                        );
+            device = new Device(DriverType.Hardware, DeviceCreationFlags.None);
+            swapChain = new SwapChain(device.Factory, device,
+                new SwapChainDescription
+                {
+                    BufferCount = 1,
+                    OutputHandle = TargetControl.Handle,
+                    IsWindowed = true,
+                    SampleDescription = new SampleDescription
+                    {
+                        Count = sample,
+                        Quality = device.CheckMultisampleQualityLevels(Format.R8G8B8A8_UNorm, sample) - 1
+                    },
+                    ModeDescription = new ModeDescription
+                    {
+                        Width = TargetControl.ClientSize.Width,
+                        Height = TargetControl.ClientSize.Height,
+                        RefreshRate = new SlimDX.Rational(RefreshRate, 1),
+                        Format = Format.R8G8B8A8_UNorm,
+                    },
+                    Usage = Usage.RenderTargetOutput,
+                    Flags = SwapChainFlags.AllowModeSwitch
+                }
+            );
             return (device, swapChain);
         }
 
