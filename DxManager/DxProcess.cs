@@ -48,6 +48,12 @@ namespace DxManager
             Stopwatch.Stop();
             WaitTime();
         }
+
+        /// <summary>
+        /// カメラ更新処理
+        /// </summary>
+        protected abstract void UpdateCamera();
+
         private void WaitTime()
         {
             var processingTime = Stopwatch.ElapsedMilliseconds;
@@ -59,14 +65,6 @@ namespace DxManager
 
             Thread.Sleep((int)idleTime);
         }
-        /// <summary>
-        /// カメラ更新処理
-        /// </summary>
-        protected virtual void UpdateCamera()
-        {
-            Effect.GetVariableByName("ViewProjection").AsMatrix().SetMatrix(Camera.GetMatrix());
-        }
-
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
