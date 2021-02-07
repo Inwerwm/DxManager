@@ -39,6 +39,15 @@ namespace DxManager.Camera
         /// <returns>変換行列</returns>
         public virtual Matrix GetMatrix()
         {
+            return CreateViewMatrix();
+        }
+
+        /// <summary>
+        /// ビュー座標変換行列を作成
+        /// </summary>
+        /// <returns>ビュー座標変換行列</returns>
+        public Matrix CreateViewMatrix()
+        {
             switch (Hand)
             {
                 case HandedSystem.Right:

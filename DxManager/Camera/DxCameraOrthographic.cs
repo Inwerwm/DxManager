@@ -25,13 +25,19 @@ namespace DxManager.Camera
 
         public override Matrix GetMatrix()
         {
-            var view = base.GetMatrix();
+            var view = CreateViewMatrix();
+            var projection = CreateProjectionMatrix();
+            return view * projection;
+        }
+
+        public Matrix CreateProjectionMatrix()
+        {
             switch (Hand)
             {
                 case HandedSystem.Right:
-                    return view * Matrix.OrthoRH(ViewVolumeSize.Width, ViewVolumeSize.Height, ViewVolumeDepth.Near, ViewVolumeDepth.Far);
+                    return Matrix.OrthoRH(ViewVolumeSize.Width, ViewVolumeSize.Height, ViewVolumeDepth.Near, ViewVolumeDepth.Far);
                 case HandedSystem.Left:
-                    return view * Matrix.OrthoLH(ViewVolumeSize.Width, ViewVolumeSize.Height, ViewVolumeDepth.Near, ViewVolumeDepth.Far);
+                    return Matrix.OrthoLH(ViewVolumeSize.Width, ViewVolumeSize.Height, ViewVolumeDepth.Near, ViewVolumeDepth.Far);
                 default:
                     throw new InvalidOperationException();
             }
