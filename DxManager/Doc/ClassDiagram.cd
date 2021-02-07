@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="DxManager.Camera.DxCamera">
+    <Position X="9.25" Y="1.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAggAAACCAAAAAAAAAAAAAAAAAACAI=</HashCode>
+      <FileName>Camera\DxCamera.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Hand" />
+      <Property Name="ProjectionType" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DxManager.Camera.DxCameraOrthographic">
+    <Position X="9.25" Y="5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAEAAAAAgAAACAAAIAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Camera\DxCameraOrthographic.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ProjectionType" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DxManager.DxContext" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="0.5" Width="2.75" />
+    <NestedTypes>
+      <Struct Name="DxManager.DxContext.Message" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>DxContext.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Class Name="DxManager.DxContext.Win32Api" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>DxContext.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AACBAAAEgCgSAggAIABIAgQABAByAAA8AAAAEgAAAII=</HashCode>
+      <FileName>DxContext.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DxManager.DxProcess" BaseTypeListCollapsed="true">
+    <Position X="4.5" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAQCEAAIAigAAgAAAAAgAAAAEAACAAAAAAACAgCAAAA=</HashCode>
+      <FileName>DxProcess.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Context" />
+      <Property Name="Camera" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Enum Name="DxManager.Camera.DxProjectionType">
+    <Position X="12.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Camera\DxProjectionType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DxManager.Camera.HandedSystem">
+    <Position X="12.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACACAAAAAAAA=</HashCode>
+      <FileName>Camera\HandedSystem.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Yu Gothic UI" Size="9" />
+</ClassDiagram>
