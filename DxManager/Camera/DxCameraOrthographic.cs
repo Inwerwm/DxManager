@@ -17,7 +17,7 @@ namespace DxManager.Camera
         /// <summary>
         /// ビューボリュームの(幅, 高)
         /// </summary>
-        public (float Width, int Height) ViewVolumeSize { get; set; }
+        public (float Width, float Height) ViewVolumeSize { get; set; }
         /// <summary>
         /// ビューボリュームのZの(最小, 最大)
         /// </summary>
