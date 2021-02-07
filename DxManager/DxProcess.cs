@@ -1,5 +1,6 @@
 ﻿using DxManager.Camera;
 using SlimDX.Direct3D11;
+using SlimDX.Multimedia;
 using System;
 using System.Diagnostics;
 using System.Threading;
@@ -27,6 +28,14 @@ namespace DxManager
         public DxCamera Camera { get; set; }
 
         private Stopwatch Stopwatch { get; } = new Stopwatch();
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        protected DxProcess()
+        {
+            InitializeInputDevice();
+        }
 
         /// <summary>
         /// 初期化処理
@@ -65,6 +74,24 @@ namespace DxManager
 
             Thread.Sleep((int)idleTime);
         }
+
+        private void InitializeInputDevice()
+        {
+            SlimDX.RawInput.Device.RegisterDevice(UsagePage.Generic, UsageId.Mouse, SlimDX.RawInput.DeviceFlags.None);
+            SlimDX.RawInput.Device.MouseInput += MouseInput;
+            SlimDX.RawInput.Device.RegisterDevice(UsagePage.Generic, UsageId.Keyboard, SlimDX.RawInput.DeviceFlags.None);
+            SlimDX.RawInput.Device.KeyboardInput += KeyboardInput;
+        }
+
+        /// <summary>
+        /// マウス入力イベント発生時の処理
+        /// </summary>
+        protected virtual void MouseInput(object sender, SlimDX.RawInput.MouseInputEventArgs e) { }
+        /// <summary>
+        /// キーボード入力イベント発生時の処理
+        /// </summary>
+        protected virtual void KeyboardInput(object sender, SlimDX.RawInput.KeyboardInputEventArgs e) { }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
