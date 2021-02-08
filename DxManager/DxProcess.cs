@@ -73,7 +73,7 @@ namespace DxManager
 
             var idleTime = refreshRateTime - processingTime;
             if (idleTime >= 0)
-                Thread.Sleep((int)Math.Round(idleTime, MidpointRounding.AwayFromZero));
+                Thread.Sleep((int)(idleTime/1.8));
             Stopwatch.Stop();
             CurrentFPS = 1000f / Stopwatch.ElapsedMilliseconds;
         }
