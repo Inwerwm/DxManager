@@ -27,6 +27,10 @@ namespace DxManager
         /// </summary>
         public DxCamera Camera { get; set; }
 
+        /// <summary>
+        /// 現在のFPS
+        /// </summary>
+        public float CurrentFPS { get; private set; }
         private Stopwatch Stopwatch { get; } = new Stopwatch();
 
         /// <summary>
@@ -54,7 +58,6 @@ namespace DxManager
             Stopwatch.Restart();
             UpdateCamera();
             Draw();
-            Stopwatch.Stop();
             WaitTime();
         }
 
@@ -69,10 +72,10 @@ namespace DxManager
             var refreshRateTime = 1.0 / Context.RefreshRate * 1000;
 
             var idleTime = refreshRateTime - processingTime;
-            if (idleTime < 0)
-                return;
-
-            Thread.Sleep((int)idleTime);
+            if (idleTime >= 0)
+                Thread.Sleep((int)Math.Round(idleTime, MidpointRounding.AwayFromZero));
+            Stopwatch.Stop();
+            CurrentFPS = 1000f / Stopwatch.ElapsedMilliseconds;
         }
 
         private void InitializeInputDevice()
