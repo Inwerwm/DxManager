@@ -222,11 +222,13 @@ namespace DxManager
         /// </summary>
         public void ChangeResolution(int width, int height)
         {
+            // バッファ変更前にレンダー対象を開放
+            RenderTarget?.Dispose();
+
             // バッファの大きさを変更
             SwapChain.ResizeBuffers(1, width, height, Format.R8G8B8A8_UNorm, SwapChainFlags.AllowModeSwitch);
 
             // RenderTargetを作り直し
-            RenderTarget?.Dispose();
             RenderTarget = CreateRenderTarget(Device, SwapChain);
 
             // DepthStencilを作り直し
