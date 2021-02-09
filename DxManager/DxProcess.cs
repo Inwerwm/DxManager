@@ -31,6 +31,10 @@ namespace DxManager
         /// 現在のFPS
         /// </summary>
         public float CurrentFPS { get; private set; }
+        /// <summary>
+        /// 描画数をContextのRefreshRateを基準に制限する
+        /// </summary>
+        public bool LimitRefresh { get; set; } = true;
         private Stopwatch Stopwatch { get; } = new Stopwatch();
 
         /// <summary>
@@ -59,6 +63,7 @@ namespace DxManager
             UpdateCamera();
             Draw();
             WaitTime();
+            Stopwatch.Stop();
         }
 
         /// <summary>
@@ -68,13 +73,15 @@ namespace DxManager
 
         private void WaitTime()
         {
-            var processingTime = Stopwatch.ElapsedMilliseconds;
-            var refreshRateTime = 1.0 / Context.RefreshRate * 1000;
+            if (LimitRefresh)
+            {
+                var processingTime = Stopwatch.ElapsedMilliseconds;
+                var refreshRateTime = 1000f / Context.RefreshRate;
 
-            var idleTime = refreshRateTime - processingTime;
-            if (idleTime >= 0)
-                Thread.Sleep((int)(idleTime/1.8));
-            Stopwatch.Stop();
+                var idleTime = refreshRateTime - processingTime;
+                if (idleTime >= 0)
+                    Thread.Sleep((int)(idleTime / 1.8));
+            }
             CurrentFPS = 1000f / Stopwatch.ElapsedMilliseconds;
         }
 
