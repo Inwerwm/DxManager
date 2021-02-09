@@ -75,12 +75,10 @@ namespace DxManager
         {
             if (LimitRefresh)
             {
-                var processingTime = Stopwatch.ElapsedMilliseconds;
-                var refreshRateTime = 1000f / Context.RefreshRate;
+                var refreshRateTime = 1000.0 / Context.RefreshRate;
 
-                var idleTime = refreshRateTime - processingTime;
-                if (idleTime >= 0)
-                    Thread.Sleep((int)(idleTime / 1.8));
+                while (refreshRateTime > Stopwatch.ElapsedMilliseconds)
+                    Thread.Sleep(1);
             }
             CurrentFPS = 1000f / Stopwatch.ElapsedMilliseconds;
         }
