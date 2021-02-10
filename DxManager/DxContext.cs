@@ -400,24 +400,23 @@ namespace DxManager
                 if (disposing)
                 {
                     // TODO: マネージド状態を破棄します (マネージド オブジェクト)
+                    RenderTarget?.Dispose();
+                    SwapChain?.Dispose();
+                    Device?.Dispose();
                 }
 
                 // TODO: アンマネージド リソース (アンマネージド オブジェクト) を解放し、ファイナライザーをオーバーライドします
                 // TODO: 大きなフィールドを null に設定します
-                RenderTarget?.Dispose();
-                SwapChain?.Dispose();
-                Device?.Dispose();
-
                 disposedValue = true;
             }
         }
 
         // 'Dispose(bool disposing)' にアンマネージド リソースを解放するコードが含まれる場合にのみ、ファイナライザーをオーバーライドします
-        ~DxContext()
-        {
-            // このコードを変更しないでください。クリーンアップ コードを 'Dispose(bool disposing)' メソッドに記述します
-            Dispose(disposing: false);
-        }
+        //~DxContext()
+        //{
+        //    // このコードを変更しないでください。クリーンアップ コードを 'Dispose(bool disposing)' メソッドに記述します
+        //    Dispose(disposing: false);
+        //}
 
         public void Dispose()
         {
