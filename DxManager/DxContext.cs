@@ -9,7 +9,6 @@ namespace DxManager
 {
     /// <summary>
     /// SlimDXをWinformで使用するためのラッパー
-    /// <para>シングルトン</para>
     /// </summary>
     public class DxContext : IDisposable
     {
@@ -64,17 +63,10 @@ namespace DxManager
         #region 初期処理
 
         /// <summary>
-        /// インスタンスを取得する
+        /// コンストラクタ
         /// </summary>
         /// <param name="targetControl">描画対象コントロール</param>
-        /// <returns>シングルトンなインスタンス</returns>
-        public static DxContext GetInstance(Control targetControl)
-        {
-            instance = instance ?? new DxContext(targetControl);
-            return instance;
-        }
-
-        private DxContext(Control targetControl)
+        public DxContext(Control targetControl)
         {
             TargetControl = targetControl;
 
