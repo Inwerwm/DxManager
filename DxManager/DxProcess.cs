@@ -59,11 +59,18 @@ namespace DxManager
         /// </summary>
         public void Update()
         {
-            Stopwatch.Restart();
-            UpdateCamera();
-            Draw();
-            WaitTime();
-            Stopwatch.Stop();
+            try
+            {
+                Stopwatch.Restart();
+                UpdateCamera();
+                Draw();
+                WaitTime();
+                Stopwatch.Stop();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         /// <summary>
