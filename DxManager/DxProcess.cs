@@ -47,7 +47,13 @@ namespace DxManager
         }
 
         /// <summary>
-        /// 初期化処理
+        /// <para>ループ開始直前に走る処理</para>
+        /// <para>主にコンストラクタで値が入っていないプロパティを用いる初期化処理をおこなう</para>
+        /// <list type="bullet">
+        /// <item>Effect</item>
+        /// <item>Context</item>
+        /// <item>Camera</item>
+        /// </list>
         /// </summary>
         public abstract void Init();
         /// <summary>
