@@ -1,6 +1,7 @@
 ﻿using DxManager.Camera;
 using SlimDX.Direct3D11;
 using SlimDX.Multimedia;
+using SlimDX.RawInput;
 using System;
 using System.Diagnostics;
 using System.Threading;
@@ -12,7 +13,7 @@ namespace DxManager
     /// </summary>
     public abstract class DxProcess : IDisposable
     {
-        private bool disposedValue;
+        protected bool disposedValue;
 
         /// <summary>
         /// エフェクト
@@ -46,7 +47,13 @@ namespace DxManager
         }
 
         /// <summary>
-        /// 初期化処理
+        /// <para>ループ開始直前に走る処理</para>
+        /// <para>主にコンストラクタで値が入っていないプロパティを用いる初期化処理をおこなう</para>
+        /// <list type="bullet">
+        /// <item>Effect</item>
+        /// <item>Context</item>
+        /// <item>Camera</item>
+        /// </list>
         /// </summary>
         public abstract void Init();
         /// <summary>
@@ -59,11 +66,18 @@ namespace DxManager
         /// </summary>
         public void Update()
         {
-            Stopwatch.Restart();
-            UpdateCamera();
-            Draw();
-            WaitTime();
-            Stopwatch.Stop();
+            try
+            {
+                Stopwatch.Restart();
+                UpdateCamera();
+                Draw();
+                WaitTime();
+                Stopwatch.Stop();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         /// <summary>
@@ -86,19 +100,26 @@ namespace DxManager
         private void InitializeInputDevice()
         {
             SlimDX.RawInput.Device.RegisterDevice(UsagePage.Generic, UsageId.Mouse, SlimDX.RawInput.DeviceFlags.None);
-            SlimDX.RawInput.Device.MouseInput += MouseInput;
             SlimDX.RawInput.Device.RegisterDevice(UsagePage.Generic, UsageId.Keyboard, SlimDX.RawInput.DeviceFlags.None);
-            SlimDX.RawInput.Device.KeyboardInput += KeyboardInput;
         }
 
         /// <summary>
-        /// マウス入力イベント発生時の処理
+        /// マウス入力時のイベントハンドラを追加する
         /// </summary>
-        protected virtual void MouseInput(object sender, SlimDX.RawInput.MouseInputEventArgs e) { }
+        /// <param name="handler">マウス入力発生時に作動させる処理</param>
+        public void AddMouseInputProcess(EventHandler<MouseInputEventArgs> handler)
+        {
+            SlimDX.RawInput.Device.MouseInput += handler;
+        }
+
         /// <summary>
-        /// キーボード入力イベント発生時の処理
+        /// キーボード入力時のイベントハンドラを追加する
         /// </summary>
-        protected virtual void KeyboardInput(object sender, SlimDX.RawInput.KeyboardInputEventArgs e) { }
+        /// <param name="handler">キーボード入力発生時に作動させる処理</param>
+        public void AddKeyboardInputProcess(EventHandler<KeyboardInputEventArgs> handler)
+        {
+            SlimDX.RawInput.Device.KeyboardInput += handler;
+        }
 
         protected virtual void Dispose(bool disposing)
         {
