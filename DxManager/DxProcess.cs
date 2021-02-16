@@ -13,7 +13,7 @@ namespace DxManager
     /// </summary>
     public abstract class DxProcess : IDisposable
     {
-        private bool disposedValue;
+        protected bool disposedValue;
 
         /// <summary>
         /// エフェクト
